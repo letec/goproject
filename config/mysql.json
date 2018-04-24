@@ -1,0 +1,6 @@
+{
+    "username":"root",
+    "password":"qqq111",
+    "dbname":"game_online",
+    "host":"127.0.0.1:3306"
+}
