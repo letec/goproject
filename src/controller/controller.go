@@ -18,7 +18,7 @@ func HelloServer(w http.ResponseWriter, req *http.Request) {
 
 // Test 路由
 func Test(w http.ResponseWriter, req *http.Request) {
-	rows, err := model.GetUserInfoByID("1")
+	rows, err := model.GetUserInfoByID("0")
 	fmt.Println(err)
 	fmt.Println(rows)
 }
