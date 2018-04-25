@@ -2,7 +2,6 @@ package controller
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"model"
 	"net/http"
@@ -18,7 +17,12 @@ func HelloServer(w http.ResponseWriter, req *http.Request) {
 
 // Test 路由
 func Test(w http.ResponseWriter, req *http.Request) {
-	rows, err := model.GetUserInfoByID("0")
-	fmt.Println(err)
-	fmt.Println(rows)
+	rows, err := model.GetUserInfoByIDs("0")
+	result := map[string]interface{}{"code": "4001"}
+	if err == nil {
+		result["code"] = "2006"
+		result["user"] = rows
+	}
+	b, _ := json.Marshal(result)
+	w.Write(b)
 }

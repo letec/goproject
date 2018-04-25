@@ -10,8 +10,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type Record interface{}
-
 const dbLog = ""
 
 var db *sql.DB
@@ -45,7 +43,8 @@ func MysqlConnect() {
 	}
 }
 
-func scanAllParams(rows *sql.Rows) (map[string]interface{}, error) {
+// SCAN ROW PARAMS
+func scanAllParams(rows *sql.Rows) map[string]interface{} {
 	// 取得所有列
 	columns, _ := rows.Columns()
 	// 计算列的数量
@@ -68,11 +67,11 @@ func scanAllParams(rows *sql.Rows) (map[string]interface{}, error) {
 		columnValue := columnPointers[i].(*interface{})
 		result[columnName] = string((*columnValue).([]uint8))
 	}
-	return result, nil
+	return result
 }
 
-// GetRow 取得单条数据
-func GetRow(table string, userDesc []string, where map[string]string) (map[string]interface{}, error) {
+// CREATE SELECT SQL
+func getSelectSQL(table string, userDesc []string, where map[string]string) string {
 	set := ""
 	length := len(userDesc)
 	if length > 0 {
@@ -99,20 +98,36 @@ func GetRow(table string, userDesc []string, where map[string]string) (map[strin
 			index++
 		}
 	}
-	sql += " LIMIT 1"
+	return sql
+}
+
+// GetRow 取得单条数据
+func GetRow(table string, userDesc []string, where map[string]string) (map[string]interface{}, error) {
+	sql := getSelectSQL(table, userDesc, where) + " LIMIT 1"
 	rows, err := db.Query(sql)
 	if err != nil {
 		common.WriteLog(dbLogPath, sql)
 		return nil, err
 	}
 	rows.Next()
-	result, err := scanAllParams(rows)
+	result := scanAllParams(rows)
 	return result, err
 }
 
 // GetRows 取得多条数据
-func GetRows(table string, where map[string]string) {
-
+func GetRows(table string, userDesc []string, where map[string]string) (map[int]map[string]interface{}, error) {
+	sql := getSelectSQL(table, userDesc, where)
+	rows, err := db.Query(sql)
+	if err != nil {
+		common.WriteLog(dbLogPath, sql)
+		return nil, err
+	}
+	var result = make(map[int]map[string]interface{})
+	index := 0
+	for rows.Next() {
+		result[index] = scanAllParams(rows)
+	}
+	return result, err
 }
 
 // InsertRow 插入单条数据
