@@ -73,7 +73,7 @@ func scanAllParams(rows *sql.Rows) map[string]interface{} {
 }
 
 // CREATE SELECT SQL
-func getSelectSQL(table string, userDesc []string, where map[string]string) string {
+func getSelectSQL(table string, userDesc []string, where map[string]string, limit int) string {
 	set := ""
 	length := len(userDesc)
 	if length > 0 {
@@ -100,12 +100,15 @@ func getSelectSQL(table string, userDesc []string, where map[string]string) stri
 			index++
 		}
 	}
+	if limit > 0 {
+		sql += " LIMIT " + string(limit)
+	}
 	return sql
 }
 
 // GetRow 取得单条数据
 func GetRow(table string, userDesc []string, where map[string]string) (map[string]interface{}, error) {
-	sql := getSelectSQL(table, userDesc, where) + " LIMIT 1"
+	sql := getSelectSQL(table, userDesc, where, 1)
 	rows, err := db.Query(sql)
 	if err != nil {
 		common.WriteLog(dbLogPath, sql)
@@ -117,8 +120,8 @@ func GetRow(table string, userDesc []string, where map[string]string) (map[strin
 }
 
 // GetRows 取得多条数据
-func GetRows(table string, userDesc []string, where map[string]string) (map[int]map[string]interface{}, error) {
-	sql := getSelectSQL(table, userDesc, where)
+func GetRows(table string, userDesc []string, where map[string]string, limit int) (map[int]map[string]interface{}, error) {
+	sql := getSelectSQL(table, userDesc, where, limit)
 	rows, err := db.Query(sql)
 	if err != nil {
 		common.WriteLog(dbLogPath, sql)
@@ -190,9 +193,11 @@ func InsertRows(table string, datas map[int]map[string]interface{}) (int64, erro
 			if in < colLength-1 {
 				temp += ","
 			}
-			in++
 		}
 		temp += ")"
+		if index < length-1 {
+			temp += ","
+		}
 		vals += temp
 	}
 	sql := "INSERT INTO " + table + "(" + keys + ") VALUES " + vals
@@ -213,11 +218,70 @@ func InsertRows(table string, datas map[int]map[string]interface{}) (int64, erro
 }
 
 // DoUpdate 执行更新命令
-func DoUpdate() {
-
+func DoUpdate(table string, data map[string]string, where map[string]string) (int64, error) {
+	length := len(data)
+	if length == 0 || table == "" {
+		return 0, errors.New("missing args")
+	}
+	updateInfo := ""
+	whereInfo := ""
+	index := 0
+	for k, v := range data {
+		updateInfo += k + "=" + "\"" + v + "\""
+		if index < length-1 {
+			updateInfo += ","
+		}
+		index++
+	}
+	index = 0
+	for k, v := range where {
+		whereInfo += k + v
+		if index < length-1 {
+			whereInfo += " AND "
+		}
+		index++
+	}
+	sql := "UPDATE " + table + " SET " + updateInfo + " WHERE " + whereInfo
+	stmt, err := db.Prepare(sql)
+	var affectedID int64
+	if err != nil {
+		common.WriteLog(dbLog, "prepare sql fail : "+sql)
+	} else {
+		rs, err := stmt.Exec()
+		if err != nil {
+			common.WriteLog(dbLog, "insert sql fail : "+sql)
+		} else {
+			affectedID, err = rs.RowsAffected()
+		}
+	}
+	return affectedID, err
 }
 
 // DoDelete 执行删除命令
-func DoDelete() {
-
+func DoDelete(table string, where map[string]string) (int64, error) {
+	length := len(where)
+	if length == 0 || table == "" {
+		return 0, errors.New("missing args")
+	}
+	sql := "DELETE FROM " + table + " WHERE "
+	index := 0
+	for k, v := range where {
+		sql += k + v
+		if index < length-1 {
+			sql += " AND "
+		}
+	}
+	stmt, err := db.Prepare(sql)
+	var affectedID int64
+	if err != nil {
+		common.WriteLog(dbLog, "prepare sql fail : "+sql)
+	} else {
+		rs, err := stmt.Exec()
+		if err != nil {
+			common.WriteLog(dbLog, "insert sql fail : "+sql)
+		} else {
+			affectedID, err = rs.RowsAffected()
+		}
+	}
+	return affectedID, err
 }

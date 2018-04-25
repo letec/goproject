@@ -26,7 +26,7 @@ func GetUserInfoByIDs(userid string) (map[int]map[string]interface{}, error) {
 		"id": "=" + userid,
 	}
 	// 这个方法我封装的 拼接SQL查询到结果
-	userInfo, err := GetRows("user", userDesc, where)
+	userInfo, err := GetRows("user", userDesc, where, 0)
 	// 报错了就返回空和错误
 	if err != nil {
 		return nil, err
