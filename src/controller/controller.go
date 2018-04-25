@@ -26,3 +26,20 @@ func Test(w http.ResponseWriter, req *http.Request) {
 	b, _ := json.Marshal(result)
 	w.Write(b)
 }
+
+// Test2 路由
+func Test2(w http.ResponseWriter, req *http.Request) {
+	datas := make(map[int]map[string]interface{})
+	datas[0] = make(map[string]interface{})
+	datas[0]["username"] = "hugo111"
+	datas[0]["password"] = "qqq111"
+	datas[0]["salt"] = "1111"
+	datas[0]["phone"] = "12121212121"
+	datas[0]["bankCode"] = "1212121212121212"
+	table := "user"
+	res, err := model.InsertRows(table, datas)
+	b, _ := json.Marshal(res)
+	if err != nil {
+		w.Write(b)
+	}
+}

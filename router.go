@@ -9,6 +9,7 @@ func getAllRouters() map[string]func(w http.ResponseWriter, req *http.Request) {
 	return map[string]func(w http.ResponseWriter, req *http.Request){
 		"/hello": controller.HelloServer,
 		"/demo":  controller.Test,
+		"/Test2": controller.Test2,
 	}
 }
 

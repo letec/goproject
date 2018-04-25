@@ -3,6 +3,8 @@ package model
 import (
 	"common"
 	"database/sql"
+	"errors"
+	"fmt"
 	"os"
 	"strings"
 
@@ -131,13 +133,83 @@ func GetRows(table string, userDesc []string, where map[string]string) (map[int]
 }
 
 // InsertRow 插入单条数据
-func InsertRow(table string, data map[string]string) {
-
+func InsertRow(table string, data map[string]string) (int64, error) {
+	length := len(data)
+	if length == 0 || table == "" {
+		return 0, errors.New("missing args")
+	}
+	keys, vals := "", ""
+	index := 0
+	for k, v := range data {
+		keys += k
+		vals += "\"" + v + "\""
+		if index < length-1 {
+			keys += ","
+			vals += ","
+		}
+		index++
+	}
+	sql := "INSERT INTO " + table + "(" + keys + ") VALUES (" + vals + ")"
+	stmt, err := db.Prepare(sql)
+	var insertID int64
+	if err != nil {
+		common.WriteLog(dbLog, "prepare sql fail : "+sql)
+	} else {
+		rs, err := stmt.Exec()
+		if err != nil {
+			common.WriteLog(dbLog, "insert sql fail : "+sql)
+		} else {
+			insertID, err = rs.LastInsertId()
+		}
+	}
+	return insertID, err
 }
 
 // InsertRows 插入多条数据
-func InsertRows(table string, datas map[string]string) {
-
+func InsertRows(table string, datas map[int]map[string]interface{}) (int64, error) {
+	length := len(datas)
+	if length == 0 || table == "" {
+		return 0, errors.New("missing args")
+	}
+	keys, vals := "", ""
+	index := 0
+	colLength := len(datas[0])
+	colName := make(map[int]string)
+	for k := range datas[0] {
+		colName[index] = k
+		keys += k
+		if index < colLength-1 {
+			keys += ","
+		}
+		index++
+	}
+	for index := 0; index < length; index++ {
+		temp := "("
+		for in := 0; in < colLength; in++ {
+			temp += "\"" + datas[index][colName[in]].(string) + "\""
+			if in < colLength-1 {
+				temp += ","
+			}
+			in++
+		}
+		temp += ")"
+		vals += temp
+	}
+	sql := "INSERT INTO " + table + "(" + keys + ") VALUES " + vals
+	fmt.Println(sql)
+	stmt, err := db.Prepare(sql)
+	var insertID int64
+	if err != nil {
+		common.WriteLog(dbLog, "prepare sql fail : "+sql)
+	} else {
+		rs, err := stmt.Exec()
+		if err != nil {
+			common.WriteLog(dbLog, "insert sql fail : "+sql)
+		} else {
+			insertID, err = rs.LastInsertId()
+		}
+	}
+	return insertID, err
 }
 
 // DoUpdate 执行更新命令
