@@ -17,14 +17,20 @@ func HelloServer(w http.ResponseWriter, req *http.Request) {
 
 // Test 路由
 func Test(w http.ResponseWriter, req *http.Request) {
-	rows, err := model.GetUserInfoByIDs("0")
-	result := map[string]interface{}{"code": "4001"}
-	if err == nil {
-		result["code"] = "2006"
-		result["user"] = rows
+	userid := "1010"
+	// 定义一个(切片)类型,类似于PHP一维数组
+	userDesc := []string{"id", "username", "realname", "phone", "bankCode"}
+	// WHERE条件写进map
+	where := map[string]string{
+		"id": "=" + userid,
 	}
-	b, _ := json.Marshal(result)
-	w.Write(b)
+	// 这个方法我封装的 拼接SQL查询到结果
+	userInfo, err := model.GetRows("user", userDesc, where, 0)
+	// 报错了就返回空和错误
+	if err == nil {
+		b, _ := json.Marshal(userInfo)
+		w.Write(b)
+	}
 }
 
 // Test2 路由
@@ -44,6 +50,7 @@ func Test2(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
+// Test3 路由
 func Test3(w http.ResponseWriter, req *http.Request) {
 	datas := make(map[string]string)
 	where := make(map[string]string)
@@ -58,6 +65,7 @@ func Test3(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
+// Test4 路由
 func Test4(w http.ResponseWriter, req *http.Request) {
 	where := make(map[string]string)
 	where["username="] = "hugo111"
