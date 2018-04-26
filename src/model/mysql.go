@@ -4,7 +4,6 @@ import (
 	"common"
 	"database/sql"
 	"errors"
-	"fmt"
 	"os"
 	"strings"
 
@@ -201,7 +200,6 @@ func InsertRows(table string, datas map[int]map[string]interface{}) (int64, erro
 		vals += temp
 	}
 	sql := "INSERT INTO " + table + "(" + keys + ") VALUES " + vals
-	fmt.Println(sql)
 	stmt, err := db.Prepare(sql)
 	var insertID int64
 	if err != nil {
@@ -223,9 +221,7 @@ func DoUpdate(table string, data map[string]string, where map[string]string) (in
 	if length == 0 || table == "" {
 		return 0, errors.New("missing args")
 	}
-	updateInfo := ""
-	whereInfo := ""
-	index := 0
+	updateInfo, whereInfo, index := "", "", 0
 	for k, v := range data {
 		updateInfo += k + "=" + "\"" + v + "\""
 		if index < length-1 {
@@ -233,9 +229,9 @@ func DoUpdate(table string, data map[string]string, where map[string]string) (in
 		}
 		index++
 	}
-	index = 0
+	length, index = len(where), 0
 	for k, v := range where {
-		whereInfo += k + v
+		whereInfo += k + "\"" + v + "\""
 		if index < length-1 {
 			whereInfo += " AND "
 		}
@@ -259,17 +255,17 @@ func DoUpdate(table string, data map[string]string, where map[string]string) (in
 
 // DoDelete 执行删除命令
 func DoDelete(table string, where map[string]string) (int64, error) {
-	length := len(where)
+	length, index := len(where), 0
 	if length == 0 || table == "" {
 		return 0, errors.New("missing args")
 	}
 	sql := "DELETE FROM " + table + " WHERE "
-	index := 0
 	for k, v := range where {
-		sql += k + v
+		sql += k + "\"" + v + "\""
 		if index < length-1 {
 			sql += " AND "
 		}
+		index++
 	}
 	stmt, err := db.Prepare(sql)
 	var affectedID int64

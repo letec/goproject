@@ -43,3 +43,29 @@ func Test2(w http.ResponseWriter, req *http.Request) {
 		w.Write(b)
 	}
 }
+
+func Test3(w http.ResponseWriter, req *http.Request) {
+	datas := make(map[string]string)
+	where := make(map[string]string)
+	datas["username"] = "mixdran"
+	datas["salt"] = "2222"
+	where["username="] = "hugo111"
+	table := "user"
+	res, err := model.DoUpdate(table, datas, where)
+	b, _ := json.Marshal(res)
+	if err != nil {
+		w.Write(b)
+	}
+}
+
+func Test4(w http.ResponseWriter, req *http.Request) {
+	where := make(map[string]string)
+	where["username="] = "hugo111"
+	where["password="] = "qqq111"
+	table := "user"
+	res, err := model.DoDelete(table, where)
+	b, _ := json.Marshal(res)
+	if err == nil {
+		w.Write(b)
+	}
+}
