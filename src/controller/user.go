@@ -56,3 +56,22 @@ func SignUp(w http.ResponseWriter, req *http.Request, user map[string]string) bo
 	w.Write(b)
 	return true
 }
+
+// SignIn 用户登陆
+func SignIn(w http.ResponseWriter, req *http.Request, user map[string]string) bool {
+	userDesc := []string{}
+	where := map[string]string{}
+	info := map[string]string{}
+	result, err := model.GetRow("user", userDesc, where)
+	if err != nil {
+		info["code"] = "10004"
+		info["msg"] = "网络错误"
+		b, _ := json.Marshal(info)
+		w.Write(b)
+		return false
+	}
+	if result != nil {
+
+	}
+	return true
+}

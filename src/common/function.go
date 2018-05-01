@@ -9,8 +9,8 @@ import (
 	"time"
 )
 
-// GetAllParams 取得JSON参数
-func GetAllParams(body []byte, w http.ResponseWriter) (map[string]string, error) {
+// AllParams 取得JSON参数
+func AllParams(body []byte, w http.ResponseWriter) (map[string]string, error) {
 	info := make(map[string]string)
 	err := json.Unmarshal(body, &info)
 	if err == nil {
