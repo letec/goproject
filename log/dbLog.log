@@ -10,3 +10,27 @@ SELECT id,username,password,salt,realname,phonebankCode FROM user WHERE id=0 LIM
 ======2018-04-23 11:41:24=====
 SELECT id,username,password,salt,realname,phonebankCode FROM user WHERE id=0 LIMIT 1
 
+======2018-05-01 11:33:48=====
+SELECT * FROM table WHERE  LIMIT 
+
+======2018-05-01 11:34:00=====
+SELECT * FROM table WHERE  LIMIT 
+
+======2018-05-01 11:34:57=====
+SELECT * FROM table WHERE username111 LIMIT 
+
+======2018-05-01 11:35:11=====
+SELECT * FROM table WHERE username=111 LIMIT 
+
+======2018-05-01 11:39:31=====
+SELECT * FROM table WHERE username=111 LIMIT 1
+
+======2018-05-01 11:40:52=====
+SELECT * FROM table WHERE username='111' LIMIT 1
+
+======2018-05-01 11:41:33=====
+SELECT * FROM table WHERE username='111' LIMIT 1
+
+======2018-05-01 11:52:00=====
+SELECT id FROM user WHERE username'=mixdran' LIMIT 1
+

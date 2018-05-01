@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"model"
 	"net/http"
@@ -25,7 +26,7 @@ func Test(w http.ResponseWriter, req *http.Request) {
 		"id": "=" + userid,
 	}
 	// 这个方法我封装的 拼接SQL查询到结果
-	userInfo, err := model.GetRows("user", userDesc, where, 0)
+	userInfo, err := model.GetRows("user", userDesc, where, "0")
 	// 报错了就返回空和错误
 	if err == nil {
 		b, _ := json.Marshal(userInfo)
@@ -76,4 +77,9 @@ func Test4(w http.ResponseWriter, req *http.Request) {
 	if err == nil {
 		w.Write(b)
 	}
+}
+
+// Test5 路由
+func Test5(w http.ResponseWriter, req *http.Request) {
+	fmt.Println(model.CheckUserExist("mixdr"))
 }

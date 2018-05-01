@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"os"
+	"strconv"
 	"strings"
 
 	// 加载MYSQL数据库
@@ -23,7 +24,7 @@ func MysqlConnect() {
 	if err != nil {
 		errInfo = "MYSQL配置文件读取失败!"
 	} else {
-		if common.CheckAllParam([]string{"username", "password", "host", "dbname"}, config) {
+		if common.CheckParamsExist([]string{"username", "password", "host", "dbname"}, config) {
 			str := []string{config["username"], ":", config["password"], "@tcp(", config["host"], ")/", config["dbname"]}
 			db, _ = sql.Open("mysql", strings.Join(str, ""))
 			db.SetMaxOpenConns(200)
@@ -72,7 +73,7 @@ func scanAllParams(rows *sql.Rows) map[string]interface{} {
 }
 
 // CREATE SELECT SQL
-func getSelectSQL(table string, userDesc []string, where map[string]string, limit int) string {
+func getSelectSQL(table string, userDesc []string, where map[string]string, limit string) string {
 	set := ""
 	length := len(userDesc)
 	if length > 0 {
@@ -92,14 +93,15 @@ func getSelectSQL(table string, userDesc []string, where map[string]string, limi
 	if length > 0 {
 		index := 0
 		for k, v := range where {
-			sql += k + v
+			sql += k + "'" + v + "'"
 			if index < length-1 {
 				sql += " AND "
 			}
 			index++
 		}
 	}
-	if limit > 0 {
+	lstr, _ := strconv.Atoi(limit)
+	if lstr > 0 {
 		sql += " LIMIT " + string(limit)
 	}
 	return sql
@@ -107,7 +109,7 @@ func getSelectSQL(table string, userDesc []string, where map[string]string, limi
 
 // GetRow 取得单条数据
 func GetRow(table string, userDesc []string, where map[string]string) (map[string]interface{}, error) {
-	sql := getSelectSQL(table, userDesc, where, 1)
+	sql := getSelectSQL(table, userDesc, where, "1")
 	rows, err := db.Query(sql)
 	if err != nil {
 		common.WriteLog(dbLogPath, sql)
@@ -119,7 +121,7 @@ func GetRow(table string, userDesc []string, where map[string]string) (map[strin
 }
 
 // GetRows 取得多条数据
-func GetRows(table string, userDesc []string, where map[string]string, limit int) (map[int]map[string]interface{}, error) {
+func GetRows(table string, userDesc []string, where map[string]string, limit string) (map[int]map[string]interface{}, error) {
 	sql := getSelectSQL(table, userDesc, where, limit)
 	rows, err := db.Query(sql)
 	if err != nil {
