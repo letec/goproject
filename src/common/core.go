@@ -1,8 +1,12 @@
 package common
 
 import (
+	"crypto/md5"
 	"crypto/rand"
 	"encoding/json"
+	"fmt"
+	"io"
+	"io/ioutil"
 	"math/big"
 	"net/http"
 	"os"
@@ -10,8 +14,9 @@ import (
 )
 
 // AllParams 取得JSON参数
-func AllParams(body []byte, w http.ResponseWriter) (map[string]string, error) {
+func AllParams(w http.ResponseWriter, req *http.Request) (map[string]string, error) {
 	info := make(map[string]string)
+	body, _ := ioutil.ReadAll(req.Body)
 	err := json.Unmarshal(body, &info)
 	if err == nil {
 		return info, nil
@@ -67,4 +72,12 @@ func RandInt64(min, max int64) int64 {
 		iInt64 = RandInt64(min, max)
 	}
 	return iInt64
+}
+
+// MD5 加密一个字符串为MD5
+func MD5(context string) string {
+	newMD5 := md5.New()
+	io.WriteString(newMD5, context)
+	result := fmt.Sprintf("%x", newMD5.Sum(nil))
+	return result
 }

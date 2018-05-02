@@ -2,6 +2,9 @@ package model
 
 import (
 	"common"
+	"crypto/md5"
+	"fmt"
+	"io"
 )
 
 // GetUserInfoByID 查询用户名
@@ -36,6 +39,10 @@ func CheckUserExist(username string) (bool, error) {
 // SignUpUser 注册新用户
 func SignUpUser(user map[string]string) (bool, error) {
 	user["salt"] = string(common.RandInt64(10000, 99999))
+	rpwd := string(user["salt"] + user["password"] + user["username"])
+	w := md5.New()
+	io.WriteString(w, rpwd)
+	user["password"] = fmt.Sprintf("%x", w.Sum(nil)) //w.Sum(nil)将w的hash转成[]byte格式
 	ret, err := InsertRow("user", user)
 	if err != nil {
 		return false, err

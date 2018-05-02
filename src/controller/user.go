@@ -50,7 +50,7 @@ func SignUp(w http.ResponseWriter, req *http.Request, user map[string]string) bo
 		w.Write(b)
 		return false
 	}
-	info["code"] = "10000"
+	info["code"] = "20000"
 	info["msg"] = "注册成功"
 	b, _ := json.Marshal(info)
 	w.Write(b)
@@ -71,7 +71,19 @@ func SignIn(w http.ResponseWriter, req *http.Request, user map[string]string) bo
 		return false
 	}
 	if result != nil {
-
+		rpwd := string(result["salt"].(string) + user["password"] + result["username"].(string))
+		cpwd := common.MD5(rpwd)
+		if cpwd == result["password"] {
+			info["code"] = "20000"
+			info["msg"] = "登陆成功"
+			b, _ := json.Marshal(info)
+			w.Write(b)
+			return true
+		}
 	}
-	return true
+	info["code"] = "20002"
+	info["msg"] = "用户名或密码错误"
+	b, _ := json.Marshal(info)
+	w.Write(b)
+	return false
 }
