@@ -42,7 +42,7 @@ func SignUpUser(user map[string]string) (bool, error) {
 	rpwd := string(user["salt"] + user["password"] + user["username"])
 	w := md5.New()
 	io.WriteString(w, rpwd)
-	user["password"] = fmt.Sprintf("%x", w.Sum(nil)) //w.Sum(nil)将w的hash转成[]byte格式
+	user["password"] = fmt.Sprintf("%x", w.Sum(nil))
 	ret, err := InsertRow("user", user)
 	if err != nil {
 		return false, err
