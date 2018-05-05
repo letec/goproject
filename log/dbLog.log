@@ -34,3 +34,57 @@ SELECT * FROM table WHERE username='111' LIMIT 1
 ======2018-05-01 11:52:00=====
 SELECT id FROM user WHERE username'=mixdran' LIMIT 1
 
+======2018-05-02 13:36:45=====
+SELECT * FROM user WHERE  LIMIT 1
+
+======2018-05-02 13:38:15=====
+SELECT * FROM user WHERE  LIMIT 1
+
+======2018-05-02 13:45:21=====
+SELECT * FROM user WHERE  LIMIT 
+
+======2018-05-02 13:47:51=====
+SELECT * FROM user WHERE  LIMIT 
+
+======2018-05-02 13:48:21=====
+SELECT * FROM user WHERE  LIMIT 
+
+======2018-05-02 13:50:00=====
+SELECT * FROM user WHERE  LIMIT 
+
+======2018-05-02 13:50:43=====
+SELECT * FROM user WHERE  LIMIT 
+
+======2018-05-02 13:52:14=====
+SELECT * FROM user WHERE  LIMIT 
+
+======2018-05-02 13:55:01=====
+SELECT * FROM user WHERE  LIMIT 
+
+======2018-05-02 16:02:49=====
+SELECT * FROM user WHERE  LIMIT 
+
+======2018-05-05 13:50:55=====
+SELECT id FROM user WHERE username='mixdran' LIMIT 
+
+======2018-05-05 13:53:52=====
+SELECT id FROM user WHERE username='mixdran' LIMIT 
+
+======2018-05-05 13:54:19=====
+SELECT id FROM user WHERE username='mixdran' LIMIT 
+
+======2018-05-05 13:55:06=====
+SELECT id FROM user WHERE username='mixdran' LIMIT 
+
+======2018-05-05 13:58:10=====
+SELECT * FROM user WHERE username'hugo111' LIMIT 1
+
+======2018-05-05 14:00:18=====
+SELECT username,password,salt FROM user WHERE username'hugo111' LIMIT 1
+
+======2018-05-05 14:00:52=====
+SELECT username,password,salt FROM user WHERE username'hugo111' LIMIT 1
+
+======2018-05-05 14:00:58=====
+SELECT username,password,salt FROM user WHERE username'hugo111' LIMIT 1
+

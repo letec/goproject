@@ -59,9 +59,18 @@ func SignUp(w http.ResponseWriter, req *http.Request, user map[string]string) bo
 
 // SignIn 用户登陆
 func SignIn(w http.ResponseWriter, req *http.Request, user map[string]string) bool {
-	userDesc := []string{}
-	where := map[string]string{}
+	params := []string{"username", "password"}
 	info := map[string]string{}
+	ret := common.CheckParamsExist(params, user)
+	if ret == false {
+		info["code"] = "10002"
+		info["msg"] = "参数缺失"
+		b, _ := json.Marshal(info)
+		w.Write(b)
+		return false
+	}
+	userDesc := []string{"username", "password", "salt"}
+	where := map[string]string{"username=": user["username"]}
 	result, err := model.GetRow("user", userDesc, where)
 	if err != nil {
 		info["code"] = "10004"

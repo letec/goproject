@@ -16,6 +16,11 @@ const dbLog = ""
 
 var db *sql.DB
 
+// GetDB 获取数据库链接资源
+func GetDB() *sql.DB {
+	return db
+}
+
 // MysqlConnect 连接MYSQL
 func MysqlConnect() {
 	flag := false
@@ -73,7 +78,7 @@ func scanAllParams(rows *sql.Rows) map[string]interface{} {
 }
 
 // CREATE SELECT SQL
-func getSelectSQL(table string, userDesc []string, where map[string]string, limit string) string {
+func createSelectSQL(table string, userDesc []string, where map[string]string, limit int) string {
 	set := ""
 	length := len(userDesc)
 	if length > 0 {
@@ -90,7 +95,7 @@ func getSelectSQL(table string, userDesc []string, where map[string]string, limi
 	}
 	sql := "SELECT " + set + " FROM " + table + " WHERE "
 	length = len(where)
-	if length > 0 {
+	if len(where) > 0 {
 		index := 0
 		for k, v := range where {
 			sql += k + "'" + v + "'"
@@ -100,53 +105,19 @@ func getSelectSQL(table string, userDesc []string, where map[string]string, limi
 			index++
 		}
 	}
-	lstr, _ := strconv.Atoi(limit)
-	if lstr > 0 {
-		sql += " LIMIT " + string(limit)
+	if limit > 0 {
+		sql += " LIMIT " + strconv.Itoa(limit)
 	}
 	return sql
 }
 
-// GetRow 取得单条数据
-func GetRow(table string, userDesc []string, where map[string]string) (map[string]interface{}, error) {
-	sql := getSelectSQL(table, userDesc, where, "1")
-	rows, err := db.Query(sql)
-	if err != nil {
-		common.WriteLog(dbLogPath, sql)
-		return nil, err
-	}
-	rows.Next()
-	result := scanAllParams(rows)
-	return result, err
-}
-
-// GetRows 取得多条数据
-func GetRows(table string, userDesc []string, where map[string]string, limit string) (map[int]map[string]interface{}, error) {
-	sql := getSelectSQL(table, userDesc, where, limit)
-	rows, err := db.Query(sql)
-	if err != nil {
-		common.WriteLog(dbLogPath, sql)
-		return nil, err
-	}
-	var result = make(map[int]map[string]interface{})
-	index := 0
-	for rows.Next() {
-		result[index] = scanAllParams(rows)
-	}
-	return result, err
-}
-
-// InsertRow 插入单条数据
-func InsertRow(table string, data map[string]string) (int64, error) {
+func createInRowSQL(table string, data map[string]string) string {
 	length := len(data)
-	if length == 0 || table == "" {
-		return 0, errors.New("missing args")
-	}
 	keys, vals := "", ""
 	index := 0
 	for k, v := range data {
 		keys += k
-		vals += "\"" + v + "\""
+		vals += "'" + v + "'"
 		if index < length-1 {
 			keys += ","
 			vals += ","
@@ -154,27 +125,10 @@ func InsertRow(table string, data map[string]string) (int64, error) {
 		index++
 	}
 	sql := "INSERT INTO " + table + "(" + keys + ") VALUES (" + vals + ")"
-	stmt, err := db.Prepare(sql)
-	var insertID int64
-	if err != nil {
-		common.WriteLog(dbLog, "prepare sql fail : "+sql)
-	} else {
-		rs, err := stmt.Exec()
-		if err != nil {
-			common.WriteLog(dbLog, "insert sql fail : "+sql)
-		} else {
-			insertID, err = rs.LastInsertId()
-		}
-	}
-	return insertID, err
+	return sql
 }
 
-// InsertRows 插入多条数据
-func InsertRows(table string, datas map[int]map[string]interface{}) (int64, error) {
-	length := len(datas)
-	if length == 0 || table == "" {
-		return 0, errors.New("missing args")
-	}
+func createInRowsSQL(table string, datas map[int]map[string]interface{}, length int) string {
 	keys, vals := "", ""
 	index := 0
 	colLength := len(datas[0])
@@ -202,6 +156,96 @@ func InsertRows(table string, datas map[int]map[string]interface{}) (int64, erro
 		vals += temp
 	}
 	sql := "INSERT INTO " + table + "(" + keys + ") VALUES " + vals
+	return sql
+}
+
+func createUpSQL(table string, data map[string]string, where map[string]string) string {
+	length := len(data)
+	updateInfo, whereInfo, index := "", "", 0
+	for k, v := range data {
+		updateInfo += k + "=" + "\"" + v + "\""
+		if index < length-1 {
+			updateInfo += ","
+		}
+		index++
+	}
+	length, index = len(where), 0
+	for k, v := range where {
+		whereInfo += k + "\"" + v + "\""
+		if index < length-1 {
+			whereInfo += " AND "
+		}
+		index++
+	}
+	sql := "UPDATE " + table + " SET " + updateInfo + " WHERE " + whereInfo
+	return sql
+}
+
+// GetRow 取得单条数据
+func GetRow(table string, userDesc []string, where map[string]string) (map[string]interface{}, error) {
+	sql := createSelectSQL(table, userDesc, where, 1)
+	rows, err := db.Query(sql)
+	result := make(map[string]interface{})
+	if err != nil {
+		common.WriteLog(dbLogPath, sql)
+		return nil, err
+	}
+	if rows != nil {
+		rows.Next()
+		result = scanAllParams(rows)
+		if len(result) < 1 {
+			result = nil
+		}
+	}
+	return result, err
+}
+
+// GetRows 取得多条数据
+func GetRows(table string, userDesc []string, where map[string]string, limit int) (map[int]map[string]interface{}, error) {
+	sql := createSelectSQL(table, userDesc, where, limit)
+	rows, err := db.Query(sql)
+	if err != nil {
+		common.WriteLog(dbLogPath, sql)
+		return nil, err
+	}
+	var result = make(map[int]map[string]interface{})
+	index := 0
+	for rows.Next() {
+		result[index] = scanAllParams(rows)
+	}
+	return result, err
+}
+
+// InsertRow 插入单条数据
+func InsertRow(table string, data map[string]string) (int64, error) {
+	length := len(data)
+	if length == 0 || table == "" {
+		return 0, errors.New("missing args")
+	}
+
+	sql := createInRowSQL(table, data)
+	stmt, err := db.Prepare(sql)
+	var insertID int64
+	if err != nil {
+		common.WriteLog(dbLog, "prepare sql fail : "+sql)
+	} else {
+		rs, err := stmt.Exec()
+		if err != nil {
+			common.WriteLog(dbLog, "insert sql fail : "+sql)
+		} else {
+			insertID, err = rs.LastInsertId()
+		}
+	}
+	return insertID, err
+}
+
+// InsertRows 插入多条数据
+func InsertRows(table string, datas map[int]map[string]interface{}) (int64, error) {
+	length := len(datas)
+	if length == 0 || table == "" {
+		return 0, errors.New("missing args")
+	}
+	sql := createInRowsSQL(table, datas, length)
 	stmt, err := db.Prepare(sql)
 	var insertID int64
 	if err != nil {
@@ -223,23 +267,7 @@ func DoUpdate(table string, data map[string]string, where map[string]string) (in
 	if length == 0 || table == "" {
 		return 0, errors.New("missing args")
 	}
-	updateInfo, whereInfo, index := "", "", 0
-	for k, v := range data {
-		updateInfo += k + "=" + "\"" + v + "\""
-		if index < length-1 {
-			updateInfo += ","
-		}
-		index++
-	}
-	length, index = len(where), 0
-	for k, v := range where {
-		whereInfo += k + "\"" + v + "\""
-		if index < length-1 {
-			whereInfo += " AND "
-		}
-		index++
-	}
-	sql := "UPDATE " + table + " SET " + updateInfo + " WHERE " + whereInfo
+	sql := createUpSQL(table, data, where)
 	stmt, err := db.Prepare(sql)
 	var affectedID int64
 	if err != nil {

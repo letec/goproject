@@ -15,6 +15,7 @@ func getAllRouters() map[string]func(w http.ResponseWriter, req *http.Request) {
 		"/Test4":  controller.Test4,
 		"/Test5":  controller.Test5,
 		"/SignUp": router.SignUp,
+		"/SignIn": router.SignIn,
 	}
 }
 

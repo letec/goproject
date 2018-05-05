@@ -25,8 +25,7 @@ func Test(w http.ResponseWriter, req *http.Request) {
 	where := map[string]string{
 		"id": "=" + userid,
 	}
-	// 这个方法我封装的 拼接SQL查询到结果
-	userInfo, err := model.GetRows("user", userDesc, where, "0")
+	userInfo, err := model.GetRows("user", userDesc, where, 0)
 	// 报错了就返回空和错误
 	if err == nil {
 		b, _ := json.Marshal(userInfo)
