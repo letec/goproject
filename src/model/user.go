@@ -3,6 +3,7 @@ package model
 import (
 	"common"
 	"strconv"
+	"time"
 )
 
 // GetUserInfoByID 查询用户名
@@ -33,7 +34,7 @@ func CheckUserExist(username string) (bool, error) {
 // SignUpUser 注册新用户
 func SignUpUser(user map[string]string) (bool, error) {
 	user["salt"] = strconv.FormatInt(common.RandInt64(10000, 99999), 10)
-	user["password"] = common.MD5(string(user["salt"] + user["password"] + user["username"]))
+	user["password"] = common.MD5(user["salt"] + user["password"] + user["username"])
 	userSQL := createInRowSQL("user", user)
 
 	trans, err := db.Begin()
@@ -65,4 +66,12 @@ func SignUpUser(user map[string]string) (bool, error) {
 	}
 	trans.Commit()
 	return true, nil
+}
+
+// SetOid 生成并向REDIS写入在线OID
+func SetOid(userid string) (string, error) {
+	time := strconv.FormatInt(time.Now().UnixNano(), 10)
+	oid := common.MD5(time + userid)
+	_, err := rds.Do("SET", oid, userid, "EX", 1200)
+	return oid, err
 }

@@ -69,7 +69,7 @@ func SignIn(w http.ResponseWriter, req *http.Request, user map[string]string) bo
 		w.Write(b)
 		return false
 	}
-	userDesc := []string{"username", "password", "salt"}
+	userDesc := []string{"id", "username", "password", "salt"}
 	where := map[string]string{"username=": user["username"]}
 	result, err := model.GetRow("user", userDesc, where)
 	if err != nil {
@@ -80,11 +80,17 @@ func SignIn(w http.ResponseWriter, req *http.Request, user map[string]string) bo
 		return false
 	}
 	if result != nil {
-		rpwd := string(result["salt"].(string) + user["password"] + result["username"].(string))
+		rpwd := result["salt"].(string) + user["password"] + result["username"].(string)
 		cpwd := common.MD5(rpwd)
 		if cpwd == result["password"] {
-			info["code"] = "20000"
-			info["msg"] = "登陆成功"
+			oid, err := model.SetOid(result["id"].(string))
+			info["code"] = "10004"
+			info["msg"] = "网络错误"
+			if err == nil {
+				info["code"] = "20000"
+				info["msg"] = "登陆成功"
+				info["oid"] = oid
+			}
 			b, _ := json.Marshal(info)
 			w.Write(b)
 			return true

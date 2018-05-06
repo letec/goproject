@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	// 加载MYSQL数据库
+	// 加载MYSQL驱动
 	_ "github.com/go-sql-driver/mysql"
 )
 
