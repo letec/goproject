@@ -29,8 +29,8 @@ func MysqlConnect() {
 	if err != nil {
 		errInfo = "MYSQL配置文件读取失败!"
 	} else {
-		if common.CheckParamsExist([]string{"username", "password", "host", "dbname"}, config) {
-			str := []string{config["username"], ":", config["password"], "@tcp(", config["host"], ")/", config["dbname"]}
+		if common.CheckParamsExist([]string{"dbm_username", "dbm_password", "dbm_host", "dbm_dbname"}, config) {
+			str := []string{config["dbm_username"], ":", config["dbm_password"], "@tcp(", config["dbm_host"], ")/", config["dbm_dbname"]}
 			db, _ = sql.Open("mysql", strings.Join(str, ""))
 			db.SetMaxOpenConns(200)
 			db.SetMaxIdleConns(10)

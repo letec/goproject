@@ -10,9 +10,19 @@ const sysLog = "log/sysLog.log"
 
 // startServer 运行服务器
 func startServer() {
-	err := http.ListenAndServe(":8080", nil)
+	config, err := common.LoadServerConfig()
 	if err != nil {
-		common.WriteLog(sysLog, "监听8080端口失败,退出程序!")
+		common.WriteLog(sysLog, "加载server配置文件失败,退出程序!")
+		os.Exit(0)
+	}
+	if !common.CheckParamsExist([]string{"port"}, config) {
+		common.WriteLog(sysLog, "server配置文件没有填写正确,退出程序!")
+		os.Exit(0)
+	}
+	port := config["port"]
+	err = http.ListenAndServe("www.xr.com:"+port, nil)
+	if err != nil {
+		common.WriteLog(sysLog, "监听"+port+"端口失败,退出程序!")
 		os.Exit(0)
 	}
 }

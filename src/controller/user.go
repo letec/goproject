@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"model"
 	"net/http"
+	"strconv"
 )
 
 // SignUp 注册用户
@@ -62,6 +63,7 @@ func SignIn(w http.ResponseWriter, req *http.Request, user map[string]string) bo
 	params := []string{"username", "password"}
 	info := map[string]string{}
 	ret := common.CheckParamsExist(params, user)
+	status := 0
 	if ret == false {
 		info["code"] = "10002"
 		info["msg"] = "参数缺失"
@@ -80,7 +82,8 @@ func SignIn(w http.ResponseWriter, req *http.Request, user map[string]string) bo
 		return false
 	}
 	if result != nil {
-		if result["status"].(int) != 0 {
+		status, _ = strconv.Atoi(result["status"].(string))
+		if status != 0 {
 			info["code"] = "10005"
 			info["msg"] = "账号已经被冻结,如有疑问请联系管理员!"
 			b, _ := json.Marshal(info)
@@ -90,7 +93,7 @@ func SignIn(w http.ResponseWriter, req *http.Request, user map[string]string) bo
 		rpwd := result["salt"].(string) + user["password"] + result["username"].(string)
 		cpwd := common.MD5(rpwd)
 		if cpwd == result["password"] {
-			oid, err := model.SetOid(result["id"].(string))
+			oid, err := model.SetOid(string(result["id"].(string)))
 			info["code"] = "10004"
 			info["msg"] = "网络错误"
 			if err == nil {

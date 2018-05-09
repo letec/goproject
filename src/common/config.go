@@ -28,3 +28,10 @@ func LoadMysqlConfig() (map[string]string, error) {
 	ret, err := getJSONInFile(filePath)
 	return ret, err
 }
+
+// LoadServerConfig 加载server配置文件
+func LoadServerConfig() (map[string]string, error) {
+	filePath := "config/server.json"
+	ret, err := getJSONInFile(filePath)
+	return ret, err
+}
