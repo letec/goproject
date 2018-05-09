@@ -6,7 +6,20 @@ import (
 	"time"
 )
 
-// GetUserInfoByID 查询用户名
+// CheckOnline 根据oid查询用户是否在线 重置过期时间 并返回userid
+func CheckOnline(oid string) (string, error) {
+	userid, err := rds.Do("GET", oid)
+	if err == nil {
+		_, err = rds.Do("SET", oid, userid, "EX", 1200)
+		if err == nil {
+			return userid.(string), err
+		}
+		rds.Do("DELETE", oid)
+	}
+	return "", err
+}
+
+// GetUserInfoByID 根据userid查询用户资料
 func GetUserInfoByID(userid string) (map[string]interface{}, error) {
 	userDesc := []string{"id", "username", "password", "salt", "realname", "phone", "bankCode"}
 	where := map[string]string{"id=": userid}

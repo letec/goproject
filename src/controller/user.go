@@ -69,7 +69,7 @@ func SignIn(w http.ResponseWriter, req *http.Request, user map[string]string) bo
 		w.Write(b)
 		return false
 	}
-	userDesc := []string{"id", "username", "password", "salt"}
+	userDesc := []string{"id", "username", "password", "salt", "status"}
 	where := map[string]string{"username=": user["username"]}
 	result, err := model.GetRow("user", userDesc, where)
 	if err != nil {
@@ -80,6 +80,13 @@ func SignIn(w http.ResponseWriter, req *http.Request, user map[string]string) bo
 		return false
 	}
 	if result != nil {
+		if result["status"].(int) != 0 {
+			info["code"] = "10005"
+			info["msg"] = "账号已经被冻结,如有疑问请联系管理员!"
+			b, _ := json.Marshal(info)
+			w.Write(b)
+			return false
+		}
 		rpwd := result["salt"].(string) + user["password"] + result["username"].(string)
 		cpwd := common.MD5(rpwd)
 		if cpwd == result["password"] {
