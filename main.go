@@ -6,7 +6,6 @@ import (
 )
 
 func main() {
-
 	// 连接MYSQL
 	model.MysqlConnect()
 
@@ -18,5 +17,4 @@ func main() {
 
 	// 开启HTTP服务
 	router.StartServer()
-
 }
