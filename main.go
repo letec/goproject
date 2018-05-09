@@ -2,6 +2,7 @@ package main
 
 import (
 	"model"
+	"router"
 )
 
 func main() {
@@ -13,9 +14,9 @@ func main() {
 	model.RedisConnect()
 
 	// 初始化路由
-	initRouter()
+	router.InitRouter()
 
 	// 开启HTTP服务
-	startServer()
+	router.StartServer()
 
 }
