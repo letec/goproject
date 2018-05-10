@@ -13,6 +13,34 @@ import (
 	"time"
 )
 
+// InSlice 判断一个值是否在切片中
+func InSlice(str string, slice []string) bool {
+	for i := 0; i < len(slice); i++ {
+		if slice[i] == str {
+			return true
+		}
+	}
+	return false
+}
+
+// MapKeys 将一个map的键排列为切片
+func MapKeys(data map[string]string) []string {
+	result := []string{}
+	for k := range data {
+		result = append(result, k)
+	}
+	return result
+}
+
+// MapValues 将一个map的值排列为切片
+func MapValues(data map[string]string) []string {
+	result := []string{}
+	for _, v := range data {
+		result = append(result, v)
+	}
+	return result
+}
+
 // AllParams 取得JSON参数
 func AllParams(w http.ResponseWriter, req *http.Request) (map[string]string, error) {
 	info := make(map[string]string)

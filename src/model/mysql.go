@@ -93,15 +93,15 @@ func createSelectSQL(table string, userDesc []string, where map[string]string, l
 	} else {
 		set += "*"
 	}
-	sql := "SELECT " + set + " FROM " + table + " WHERE "
+	sql := "SELECT " + set + " FROM " + table + " WHERE 1 = 1 "
 	length = len(where)
 	if len(where) > 0 {
 		index := 0
 		for k, v := range where {
-			sql += k + "'" + v + "'"
 			if index < length-1 {
 				sql += " AND "
 			}
+			sql += k + "'" + v + "'"
 			index++
 		}
 	}
@@ -212,6 +212,7 @@ func GetRows(table string, userDesc []string, where map[string]string, limit int
 	index := 0
 	for rows.Next() {
 		result[index] = scanAllParams(rows)
+		index++
 	}
 	return result, err
 }
@@ -289,6 +290,8 @@ func DoDelete(table string, where map[string]string) (int64, error) {
 	if length == 0 || table == "" {
 		return 0, errors.New("missing args")
 	}
+
+	var affectedID int64
 	sql := "DELETE FROM " + table + " WHERE "
 	for k, v := range where {
 		sql += k + "\"" + v + "\""
@@ -297,12 +300,10 @@ func DoDelete(table string, where map[string]string) (int64, error) {
 		}
 		index++
 	}
-	stmt, err := db.Prepare(sql)
-	var affectedID int64
+	rs, err := db.Exec(sql)
 	if err != nil {
 		common.WriteLog(dbLog, "prepare sql fail : "+sql)
 	} else {
-		rs, err := stmt.Exec()
 		if err != nil {
 			common.WriteLog(dbLog, "insert sql fail : "+sql)
 		} else {

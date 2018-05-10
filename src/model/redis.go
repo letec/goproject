@@ -42,9 +42,9 @@ func RedisConnect() {
 
 // RdsGetJSON 取得数据
 func RdsGetJSON(key string) (map[string]string, error) {
+	var val string
 	result := make(map[string]string)
-	isExit, err := redis.Bool(rds.Do("EXISTS", "mykey1"))
-	val := ""
+	isExit, err := redis.Bool(rds.Do("EXISTS", key))
 	if err == nil && isExit {
 		ret, err := redis.String(rds.Do("GET", key))
 		if err != nil {
@@ -56,12 +56,15 @@ func RdsGetJSON(key string) (map[string]string, error) {
 }
 
 // RdsSetJSON 设置数据
-func RdsSetJSON(key string, val string, exp ...string) error {
-	var err error
+func RdsSetJSON(key string, val map[string]string, exp ...string) error {
+	ret, err := json.Marshal(val)
+	if err != nil {
+		return err
+	}
 	if exp[0] == "1" {
-		_, err = rds.Do("SET", key, val, "EX", exp)
+		_, err = rds.Do("SET", key, ret, "EX", exp)
 	} else {
-		_, err = rds.Do("SET", key, val)
+		_, err = rds.Do("SET", key, ret)
 	}
 	return err
 }

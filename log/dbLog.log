@@ -1,0 +1,141 @@
+======2018-05-10 20:39:01=====
+SELECT * FROM sys_config WHERE 
+
+======2018-05-10 20:46:44=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 20:46:59=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 20:47:40=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 20:48:13=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 20:48:35=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 20:49:11=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES('?',?,?,'?',?)
+
+======2018-05-10 20:53:53=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 20:55:02=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 20:55:23=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 20:57:01=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 20:57:22=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 21:25:16=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 21:25:57=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 21:26:54=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 21:27:14=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 21:27:33=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 21:32:23=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 21:33:28=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 21:33:47=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 21:34:16=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 21:34:53=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 21:35:56=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 21:39:09=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 21:40:05=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 21:40:27=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 21:51:57=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 21:52:18=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 21:52:44=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 21:53:34=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 21:54:07=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 21:54:21=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 21:55:23=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 21:55:59=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 21:56:32=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 21:56:55=====
+SELECT * FROM sys_config WHERE 1'1'
+
+======2018-05-10 21:58:11=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 21:58:23=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 21:58:54=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 21:59:52=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 22:00:48=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 22:01:00=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 22:01:52=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 22:02:09=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 22:02:39=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 22:02:47=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-10 22:05:53=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
