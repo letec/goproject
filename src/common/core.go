@@ -3,12 +3,9 @@ package common
 import (
 	"crypto/md5"
 	"crypto/rand"
-	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"math/big"
-	"net/http"
 	"os"
 	"time"
 )
@@ -39,21 +36,6 @@ func MapValues(data map[string]string) []string {
 		result = append(result, v)
 	}
 	return result
-}
-
-// AllParams 取得JSON参数
-func AllParams(w http.ResponseWriter, req *http.Request) (map[string]string, error) {
-	info := make(map[string]string)
-	body, _ := ioutil.ReadAll(req.Body)
-	err := json.Unmarshal(body, &info)
-	if err == nil {
-		return info, nil
-	}
-	info["code"] = "10001"
-	info["msg"] = "参数结构错误"
-	b, _ := json.Marshal(info)
-	w.Write(b)
-	return nil, err
 }
 
 // InMap 判断一个键在不在MAP里面
