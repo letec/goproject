@@ -28,7 +28,7 @@ func InitSysConfig() {
 		tmp = append(tmp, configs[i]["cfgName"].(string))
 	}
 	for k := range SysConfig {
-		if !common.InSlice(k, tmp) {
+		if common.InSlice(k, tmp) == false {
 			inserts = append(inserts, k)
 		}
 	}

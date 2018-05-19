@@ -1,34 +1,37 @@
 package router
 
 import (
+	"controller"
 	"encoding/json"
-	"io/ioutil"
+	"fmt"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
-var routers = map[string]func(w http.ResponseWriter, req *http.Request){
-	"/signin": SignIn,
-	"/signup": SignUp,
-}
-
 // InitRouter 绑定所有路由
-func InitRouter() {
-	for k, v := range routers {
-		http.HandleFunc(k, v)
-	}
+func InitRouter(port string) {
+	router := gin.New()
+	router.GET("/signin", controller.GetMaintenance)        // 登陆
+	router.POST("/signin", JSONParams(), controller.SignIn) // 登陆
+	router.POST("/signup", JSONParams(), controller.SignUp) // 注册
+	router.Run(port)
 }
 
-// AllParams 取得JSON参数
-func AllParams(w http.ResponseWriter, req *http.Request) (map[string]string, error) {
-	info := make(map[string]string)
-	body, _ := ioutil.ReadAll(req.Body)
-	err := json.Unmarshal(body, &info)
-	if err == nil {
-		return info, nil
+// JSONParams 取得JSON参数
+func JSONParams() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var buf []byte
+		c.Request.Body.Read(buf)
+		info := make(map[string]string)
+		err := json.Unmarshal(buf, &info)
+		fmt.Println(info)
+		if err != nil {
+			c.Set("isNext", false)
+			c.JSON(http.StatusOK, gin.H{"code": "10001", "msg": "参数结构错误"})
+		} else {
+			c.Set("isNext", true)
+			c.Set("MAP", info)
+		}
 	}
-	info["code"] = "10001"
-	info["msg"] = "参数结构错误"
-	b, _ := json.Marshal(info)
-	w.Write(b)
-	return nil, err
 }

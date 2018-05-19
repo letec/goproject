@@ -3,7 +3,6 @@ package main
 import (
 	"common"
 	"model"
-	"net/http"
 	"os"
 	"router"
 )
@@ -22,11 +21,8 @@ func startServer() {
 		os.Exit(0)
 	}
 	port := config["port"]
-	err = http.ListenAndServe("www.xr.com:"+port, nil)
-	if err != nil {
-		common.WriteLog(sysLog, "监听"+port+"端口失败,退出程序!")
-		os.Exit(0)
-	}
+
+	router.InitRouter(port)
 }
 
 func main() {
@@ -38,9 +34,6 @@ func main() {
 
 	// 获取或初始化数据库内的配置信息
 	model.InitSysConfig()
-
-	// 初始化路由
-	router.InitRouter()
 
 	// 开启HTTP服务
 	startServer()

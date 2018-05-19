@@ -1,0 +1,54 @@
+======2018-05-19 10:45:04=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-19 10:45:19=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-19 11:04:02=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-19 11:14:10=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-19 11:14:12=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-19 11:15:08=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-19 11:20:51=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-19 11:21:12=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-19 11:21:45=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-19 11:24:54=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-19 11:27:51=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-19 11:28:33=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-19 11:29:30=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-19 11:30:15=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-19 11:30:45=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-19 11:30:53=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-19 11:31:24=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
+======2018-05-19 11:31:29=====
+INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+
