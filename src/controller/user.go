@@ -11,81 +11,76 @@ import (
 
 // SignUp 注册用户
 func SignUp(c *gin.Context) {
-	params := []string{"username", "password", "realname"}
-	v, b := c.Get("isNext")
-	if !(b && v.(bool)) {
-		return
-	}
-	info, b := c.Get("MAP")
+	params := []string{"username", "password", "repassword"}
+	info, _ := c.Get("MAP")
 	user := info.(map[string]string)
 	ret := common.CheckParamsExist(params, user)
 	if ret == false {
-		c.JSON(http.StatusOK, gin.H{"code": "10002", "msg": "参数缺失"})
-		return
+		c.JSON(http.StatusOK, gin.H{"result": false, "msg": "参数缺失"})
+
 	}
 	ret = common.ValidSignUp(user)
 	if ret == false {
-		c.JSON(http.StatusOK, gin.H{"code": "10003", "msg": "参数验证不通过"})
+		c.JSON(http.StatusOK, gin.H{"result": false, "msg": "参数验证不通过"})
+		return
+	}
+	if user["password"] != user["repassword"] {
+		c.JSON(http.StatusOK, gin.H{"result": false, "msg": "两次输入的密码不一致"})
 		return
 	}
 	flag, err := model.CheckUserExist(user["username"])
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{"code": "10004", "msg": "网络错误"})
+		c.JSON(http.StatusOK, gin.H{"result": false, "msg": "网络错误"})
 		return
 	}
 	if flag == true {
-		c.JSON(http.StatusOK, gin.H{"code": "20001", "msg": "用户名已经存在"})
+		c.JSON(http.StatusOK, gin.H{"result": false, "msg": "用户名已经存在"})
 		return
 	}
 	flag, err = model.SignUpUser(user)
 	if err != nil || flag == false {
-		c.JSON(http.StatusOK, gin.H{"code": "10004", "msg": "网络错误"})
+		c.JSON(http.StatusOK, gin.H{"result": false, "msg": "网络错误"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"code": "20000", "msg": "注册成功"})
+	c.JSON(http.StatusOK, gin.H{"result": true, "msg": "注册成功"})
 	return
 }
 
 // SignIn 用户登陆
 func SignIn(c *gin.Context) {
 	params := []string{"username", "password"}
-	v, b := c.Get("isNext")
-	if !(b && v.(bool)) {
-		return
-	}
-	info, b := c.Get("MAP")
+	info, _ := c.Get("MAP")
 	user := info.(map[string]string)
 	ret := common.CheckParamsExist(params, user)
 	status := 0
 	if ret == false {
-		c.JSON(http.StatusOK, gin.H{"code": "10002", "msg": "参数缺失"})
+		c.JSON(http.StatusOK, gin.H{"result": false, "msg": "参数缺失"})
 		return
 	}
-	userDesc := []string{"id", "username", "password", "salt", "status"}
-	where := map[string]string{"username=": user["username"]}
-	result, err := model.GetRow("user", userDesc, where)
+	where := map[string]string{"UserName=": user["username"]}
+	result, err := model.GetRow("user", []string{}, where)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{"code": "10004", "msg": "网络错误"})
+		c.JSON(http.StatusOK, gin.H{"result": false, "msg": "网络错误" + err.Error()})
 		return
 	}
 	if result != nil {
-		status, _ = strconv.Atoi(result["status"].(string))
+		status, _ = strconv.Atoi(result["Status"].(string))
 		if status != 0 {
-			c.JSON(http.StatusOK, gin.H{"code": "10005", "msg": "账号已经被冻结,如有疑问请联系管理员!"})
+			c.JSON(http.StatusOK, gin.H{"result": false, "msg": "账号已经被冻结,如有疑问请联系管理员!"})
 			return
 		}
-		rpwd := result["salt"].(string) + user["password"] + result["username"].(string)
+		rpwd := result["Salt"].(string) + user["password"] + result["UserName"].(string)
 		cpwd := common.MD5(rpwd)
-		if cpwd == result["password"] {
+		if cpwd == result["PassWord"] {
 			oid, err := model.SetOid(string(result["id"].(string)))
 			if err != nil {
-				c.JSON(http.StatusOK, gin.H{"code": "10004", "msg": "网络错误"})
+				c.JSON(http.StatusOK, gin.H{"result": false, "msg": "网络错误"})
 				return
 			}
-			c.JSON(http.StatusOK, gin.H{"code": "20000", "msg": "登陆成功", "oid": oid})
+			c.JSON(http.StatusOK, gin.H{"result": true, "msg": "登陆成功", "oid": oid})
 			return
 		}
 	}
-	c.JSON(http.StatusOK, gin.H{"code": "20002", "msg": "用户名或密码错误"})
+	c.JSON(http.StatusOK, gin.H{"result": false, "msg": "用户名或密码错误"})
 	return
 }

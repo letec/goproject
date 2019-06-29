@@ -1,54 +1,30 @@
-======2018-05-19 10:45:04=====
-INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+======2019-06-29 12:10:56=====
+SELECT * FROM config WHERE 1 = 1 
 
-======2018-05-19 10:45:19=====
-INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+======2019-06-29 12:16:28=====
+SELECT * FROM config WHERE 1 = 1 
 
-======2018-05-19 11:04:02=====
-INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+======2019-06-29 12:16:42=====
+SELECT * FROM config WHERE 1 = 1 
 
-======2018-05-19 11:14:10=====
-INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+======2019-06-29 15:01:12=====
+SELECT id,username,password,salt,status FROM user WHERE 1 = 1 username='mixdran' LIMIT 1
 
-======2018-05-19 11:14:12=====
-INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+======2019-06-29 15:01:31=====
+SELECT id,username,password,salt,status FROM user WHERE 1 = 1 username='mixdran' LIMIT 1
 
-======2018-05-19 11:15:08=====
-INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+======2019-06-29 15:02:04=====
+SELECT id,username,password,salt,status FROM user WHERE 1 = 1 username='mixdran' LIMIT 1
 
-======2018-05-19 11:20:51=====
-INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+======2019-06-29 15:03:25=====
+SELECT id,UserName,PassWord,Salt FROM user WHERE 1 = 1 UserName='mixdran' LIMIT 1
 
-======2018-05-19 11:21:12=====
-INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+======2019-06-29 15:03:54=====
+SELECT * FROM user WHERE 1 = 1 UserName='mixdran' LIMIT 1
 
-======2018-05-19 11:21:45=====
-INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+======2019-06-29 15:04:25=====
+SELECT * FROM user WHERE 1 = 1 UserName='mixdran' LIMIT 1
 
-======2018-05-19 11:24:54=====
-INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
-
-======2018-05-19 11:27:51=====
-INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
-
-======2018-05-19 11:28:33=====
-INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
-
-======2018-05-19 11:29:30=====
-INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
-
-======2018-05-19 11:30:15=====
-INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
-
-======2018-05-19 11:30:45=====
-INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
-
-======2018-05-19 11:30:53=====
-INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
-
-======2018-05-19 11:31:24=====
-INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
-
-======2018-05-19 11:31:29=====
-INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)
+======2019-06-29 15:05:10=====
+SELECT * FROM user WHERE 1 = 1 UserName='mixdran' LIMIT 1
 

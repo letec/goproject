@@ -3,6 +3,7 @@ package model
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"goproject/src/common"
 	"os"
 	"strconv"
@@ -35,10 +36,11 @@ func MysqlConnect() {
 			db.SetMaxOpenConns(200)
 			db.SetMaxIdleConns(10)
 			err = db.Ping()
+			fmt.Println(strings.Join(str, ""))
 			if err == nil {
 				flag = true
 			} else {
-				errInfo = "数据库连接失败!"
+				errInfo = "数据库连接失败!" + err.Error()
 			}
 		} else {
 			errInfo = "MYSQL配置文件没有填写正确!"
@@ -93,12 +95,12 @@ func createSelectSQL(table string, userDesc []string, where map[string]string, l
 	} else {
 		set += "*"
 	}
-	sql := "SELECT " + set + " FROM " + table + " WHERE 1 = 1 "
+	sql := "SELECT " + set + " FROM " + table + " WHERE 1 = 1"
 	length = len(where)
 	if len(where) > 0 {
 		index := 0
 		for k, v := range where {
-			if index < length-1 {
+			if index <= length-1 {
 				sql += " AND "
 			}
 			sql += k + "'" + v + "'"

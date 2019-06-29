@@ -3,7 +3,6 @@ package model
 import (
 	"goproject/src/common"
 	"os"
-	"strconv"
 	"time"
 )
 
@@ -38,7 +37,7 @@ func InitSysConfig() {
 			common.WriteLog(dbLogPath, "事务开启失败,程序退出!func InitSysConfig()")
 			os.Exit(0)
 		}
-		sql := "INSERT INTO sys_config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)"
+		sql := "INSERT INTO config(cfgName,cfgValue,cfgTime,cfgAdmin,cfgIP) VALUES(?,?,?,?,?)"
 		stmt, _ := trans.Prepare(sql)
 		for _, v := range inserts {
 			_, err := stmt.Exec(v, SysConfig[v], time.Now().Unix(), "SYSTEM", "127.0.0.1")
@@ -54,7 +53,7 @@ func InitSysConfig() {
 
 // SystemConfigs 获取数据库内的配置信息
 func SystemConfigs() map[int]map[string]interface{} {
-	configList, err := GetRows("sys_config", []string{}, map[string]string{}, 0)
+	configList, err := GetRows("config", []string{}, map[string]string{}, 0)
 	if err != nil {
 		errInfo := "读取sys配置表出错,程序退出!"
 		common.WriteLog(sysLogPath, errInfo)
@@ -69,7 +68,7 @@ func GetMaintenance() map[string]string {
 	if err != nil && len(rdi) > 0 {
 		return rdi
 	}
-	sql := "SELECT cfgName,cfgValue FROM sys_config WHERE cfgName IN ('maintenance','ag_open','loterry_open','pocker_open','chess_open') "
+	sql := "SELECT cfgName,cfgValue FROM config WHERE cfgName IN ('maintenance','ag_open','loterry_open','pocker_open','chess_open') "
 	rs, err := db.Query(sql)
 	result := map[string]string{}
 	if err != nil {
@@ -77,7 +76,7 @@ func GetMaintenance() map[string]string {
 	}
 	for rs.Next() {
 		tmp := scanAllParams(rs)
-		result[tmp["cfgName"].(string)] = strconv.Itoa(tmp["cfgValue"].(int))
+		result[tmp["cfgName"].(string)] = tmp["cfgValue"].(string)
 	}
 	RdsSetJSON("GetMaintenance", result, "5")
 	return result
