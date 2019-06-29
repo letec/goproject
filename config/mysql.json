@@ -1,11 +1,11 @@
 {
     "dbm_username":"root",
-    "dbm_password":"qqq111",
-    "dbm_dbname":"game_online",
+    "dbm_password":"root",
+    "dbm_dbname":"online",
     "dbm_host":"127.0.0.1:3306",
 
     "dbs_username":"root",
-    "dbs_password":"qqq111",
-    "dbs_dbname":"game_online",
+    "dbs_password":"root",
+    "dbs_dbname":"online",
     "dbs_host":"127.0.0.1:3306"
 }

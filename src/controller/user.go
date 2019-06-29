@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"common"
-	"model"
+	"goproject/src/common"
+	"goproject/src/model"
 	"net/http"
 	"strconv"
 

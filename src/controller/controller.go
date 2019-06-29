@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"model"
+	"goproject/src/model"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

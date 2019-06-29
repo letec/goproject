@@ -1,8 +1,8 @@
 package model
 
 import (
-	"common"
 	"encoding/json"
+	"goproject/src/common"
 	"os"
 
 	"github.com/garyburd/redigo/redis"

@@ -1,9 +1,9 @@
 package model
 
 import (
-	"common"
 	"database/sql"
 	"errors"
+	"goproject/src/common"
 	"os"
 	"strconv"
 	"strings"

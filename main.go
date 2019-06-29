@@ -1,10 +1,10 @@
 package main
 
 import (
-	"common"
-	"model"
+	"goproject/src/common"
+	"goproject/src/model"
+	"goproject/src/router"
 	"os"
-	"router"
 )
 
 const sysLog = "log/sysLog.log"

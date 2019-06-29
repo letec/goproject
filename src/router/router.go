@@ -1,9 +1,9 @@
 package router
 
 import (
-	"controller"
 	"encoding/json"
 	"fmt"
+	"goproject/src/controller"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

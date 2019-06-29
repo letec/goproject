@@ -1,7 +1,7 @@
 package model
 
 import (
-	"common"
+	"goproject/src/common"
 	"os"
 	"strconv"
 	"time"
