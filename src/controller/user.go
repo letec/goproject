@@ -7,17 +7,18 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/mojocn/base64Captcha"
 )
 
 // SignUp 注册用户
 func SignUp(c *gin.Context) {
-	params := []string{"username", "password", "repassword"}
+	params := []string{"username", "password", "repassword", "vCode", "vcodeID"}
 	info, _ := c.Get("MAP")
 	user := info.(map[string]string)
 	ret := common.CheckParamsExist(params, user)
 	if ret == false {
 		c.JSON(http.StatusOK, gin.H{"result": false, "msg": "参数缺失"})
-
+		return
 	}
 	ret = common.ValidSignUp(user)
 	if ret == false {
@@ -26,6 +27,10 @@ func SignUp(c *gin.Context) {
 	}
 	if user["password"] != user["repassword"] {
 		c.JSON(http.StatusOK, gin.H{"result": false, "msg": "两次输入的密码不一致"})
+		return
+	}
+	if !base64Captcha.VerifyCaptcha(user["vcodeID"], user["vCode"]) {
+		c.JSON(http.StatusOK, gin.H{"result": false, "msg": "验证码错误"})
 		return
 	}
 	flag, err := model.CheckUserExist(user["username"])

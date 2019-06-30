@@ -61,10 +61,30 @@ func RdsSetJSON(key string, val map[string]string, exp ...string) error {
 	if err != nil {
 		return err
 	}
-	if exp[0] == "1" {
-		_, err = rds.Do("SET", key, ret, "EX", exp)
+	if len(exp) == 1 {
+		_, err = rds.Do("SET", key, ret, "EX", exp[0])
 	} else {
 		_, err = rds.Do("SET", key, ret)
 	}
 	return err
+}
+
+// RedisSet 写入一个key/value值
+func RedisSet(key string, val string, exp ...string) error {
+	var err error
+	if len(exp) == 1 {
+		_, err = rds.Do("SET", key, val, "EX", exp[0])
+	} else {
+		_, err = rds.Do("SET", key, val)
+	}
+	return err
+}
+
+// RedisGet 拿到一个key/value值
+func RedisGet(key string) string {
+	ret, err := redis.String(rds.Do("GET", key))
+	if err != nil {
+		return ""
+	}
+	return ret
 }
