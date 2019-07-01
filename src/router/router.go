@@ -16,10 +16,11 @@ import (
 func InitRouter(port string) {
 	router := gin.New()
 	router.Use(Cors())
-	router.POST("/maintenance", JSONParams(), controller.GetMaintenance) // 维护
 	router.GET("/captcha", controller.CreateCaptcha)                     // 验证码
+	router.POST("/maintenance", JSONParams(), controller.GetMaintenance) // 维护
 	router.POST("/signin", JSONParams(), controller.SignIn)              // 登陆
 	router.POST("/signup", JSONParams(), controller.SignUp)              // 注册
+	router.POST("/hall", JSONParams(), controller.GetSeatList)           // 注册
 	router.Run(port)
 }
 
