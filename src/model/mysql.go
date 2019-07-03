@@ -219,6 +219,41 @@ func GetRows(table string, userDesc []string, where map[string]string, limit int
 	return result, err
 }
 
+// WhereIn 使用IN查询
+func WhereIn(table string, userDesc []string, column string, allID []string) (map[int]map[string]interface{}, error) {
+	var result = make(map[int]map[string]interface{})
+	if len(allID) == 0 {
+		return result, nil
+	}
+	ids := strings.Join(allID, ",")
+	set := ""
+	length := len(userDesc)
+	if length > 0 {
+		index := 0
+		for k := range userDesc {
+			set += userDesc[k]
+			if index < length-1 {
+				set += ","
+			}
+			index++
+		}
+	} else {
+		set += "*"
+	}
+	sql := fmt.Sprintf("SELECT %v FROM `%v` WHERE `%v` IN (%v)", set, table, column, ids)
+	rows, err := db.Query(sql)
+	if err != nil {
+		common.WriteLog(dbLogPath, sql)
+		return nil, err
+	}
+	index := 0
+	for rows.Next() {
+		result[index] = scanAllParams(rows)
+		index++
+	}
+	return result, err
+}
+
 // InsertRow 插入单条数据
 func InsertRow(table string, data map[string]string) (int64, error) {
 	length := len(data)

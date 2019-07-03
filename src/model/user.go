@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"goproject/src/common"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/garyburd/redigo/redis"
@@ -11,16 +12,19 @@ import (
 
 // CheckOnline 根据oid查询用户是否在线 重置过期时间 并返回userid
 func CheckOnline(oid string) (string, error) {
-	userid, err := redis.String(rds.Do("GET", oid))
+	Rds := RedisClient.Get()
+	defer Rds.Close()
+	userid, err := redis.String(Rds.Do("GET", oid))
 	if err == nil {
-		dOid, err := redis.String(rds.Do("GET", "SESSION_"+userid))
+		dOid, err := redis.String(Rds.Do("GET", "SESSION_"+userid))
 		if err == nil && dOid == oid {
-			rds.Do("SET", oid, userid, "EX", 1200)
+			Rds.Do("EXPIRE", oid, 1200)
+			Rds.Do("EXPIRE", "SESSION_"+userid, 1200)
 			return userid, err
 		}
-		rds.Do("DELETE", oid)
-		rds.Do("DELETE", "SESSION_"+userid)
 	}
+	Rds.Do("DELETE", oid)
+	Rds.Do("DELETE", "SESSION_"+userid)
 	return "", err
 }
 
@@ -93,9 +97,32 @@ func SignUpUser(user map[string]string) (bool, error) {
 
 // SetOid 生成并向REDIS写入在线OID
 func SetOid(userid string) (string, error) {
+	Rds := RedisClient.Get()
 	time := strconv.FormatInt(time.Now().UnixNano(), 10)
 	oid := common.MD5(time + userid)
-	_, err := rds.Do("SET", oid, userid, "EX", 1200)
-	_, err = rds.Do("SET", "SESSION_"+userid, oid, "EX", 1200)
+	_, err := Rds.Do("SET", oid, userid, "EX", 1200)
+	_, err = Rds.Do("SET", "SESSION_"+userid, oid, "EX", 1200)
+	defer Rds.Close()
 	return oid, err
+}
+
+// GetUserInfoInHall 获取大厅中用户信息
+func GetUserInfoInHall(allID []string) (map[int]map[string]interface{}, error) {
+	var result = make(map[int]map[string]interface{})
+	if len(allID) == 0 {
+		return result, nil
+	}
+	ids := strings.Join(allID, ",")
+	sql := fmt.Sprintf("SELECT a.*,b.Avatar FROM `user` LEFT JOIN `account` ON a.id = b.UserID WHERE a.id IN (%v)", ids)
+	rows, err := db.Query(sql)
+	if err != nil {
+		common.WriteLog(dbLogPath, sql)
+		return nil, err
+	}
+	index := 0
+	for rows.Next() {
+		result[index] = scanAllParams(rows)
+		index++
+	}
+	return result, err
 }

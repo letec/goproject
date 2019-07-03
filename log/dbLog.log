@@ -28,3 +28,21 @@ SELECT * FROM user WHERE 1 = 1 UserName='mixdran' LIMIT 1
 ======2019-06-29 15:05:10=====
 SELECT * FROM user WHERE 1 = 1 UserName='mixdran' LIMIT 1
 
+======2019-07-03 10:23:37=====
+SELECT UserName,Score FROM `user` WHERE `id` IN ()
+
+======2019-07-03 16:29:29=====
+SELECT a.*,b.Avatar FROM `user` LEFT JOIN `account` ON a.id = b.UserID WHERE a.id IN (1)
+
+======2019-07-03 16:31:06=====
+SELECT a.*,b.Avatar FROM `user` LEFT JOIN `account` ON a.id = b.UserID WHERE a.id IN (1)
+
+======2019-07-03 16:31:14=====
+SELECT a.*,b.Avatar FROM `user` LEFT JOIN `account` ON a.id = b.UserID WHERE a.id IN (1)
+
+======2019-07-03 16:32:35=====
+SELECT a.*,b.Avatar FROM `user` LEFT JOIN `account` ON a.id = b.UserID WHERE a.id IN (1)
+
+======2019-07-03 16:32:40=====
+SELECT a.*,b.Avatar FROM `user` LEFT JOIN `account` ON a.id = b.UserID WHERE a.id IN (1)
+

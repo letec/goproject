@@ -35,7 +35,7 @@ func SignUp(c *gin.Context) {
 	}
 	flag, err := model.CheckUserExist(user["username"])
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{"result": false, "msg": "网络错误"})
+		c.JSON(http.StatusOK, gin.H{"result": false, "msg": "网络错误" + err.Error()})
 		return
 	}
 	if flag == true {
@@ -44,7 +44,7 @@ func SignUp(c *gin.Context) {
 	}
 	flag, err = model.SignUpUser(user)
 	if err != nil || flag == false {
-		c.JSON(http.StatusOK, gin.H{"result": false, "msg": "网络错误"})
+		c.JSON(http.StatusOK, gin.H{"result": false, "msg": "网络错误" + err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"result": true, "msg": "注册成功"})
@@ -79,7 +79,7 @@ func SignIn(c *gin.Context) {
 		if cpwd == result["PassWord"] {
 			oid, err := model.SetOid(string(result["id"].(string)))
 			if err != nil {
-				c.JSON(http.StatusOK, gin.H{"result": false, "msg": "网络错误"})
+				c.JSON(http.StatusOK, gin.H{"result": false, "msg": "网络错误" + err.Error()})
 				return
 			}
 			c.JSON(http.StatusOK, gin.H{"result": true, "msg": "登陆成功", "oid": oid})

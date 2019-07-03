@@ -20,7 +20,8 @@ func InitRouter(port string) {
 	router.POST("/maintenance", JSONParams(), controller.GetMaintenance) // 维护
 	router.POST("/signin", JSONParams(), controller.SignIn)              // 登陆
 	router.POST("/signup", JSONParams(), controller.SignUp)              // 注册
-	router.POST("/hall", JSONParams(), controller.GetSeatList)           // 注册
+	router.POST("/hall", JSONParams(), controller.GetSeatList)           // 获取房间信息
+	router.POST("/intohall", JSONParams(), controller.GetIntoHall)       // 进入房间
 	router.Run(port)
 }
 
@@ -41,7 +42,7 @@ func JSONParams() gin.HandlerFunc {
 			userid, err := model.CheckOnline(info["oid"])
 			c.Set("userid", userid)
 			if err != nil && userid == "" {
-				c.AbortWithStatusJSON(http.StatusOK, gin.H{"result": false, "msg": "您已经被登出"})
+				c.AbortWithStatusJSON(http.StatusOK, gin.H{"result": false, "msg": "OFFLINE"})
 			}
 		}
 	}
