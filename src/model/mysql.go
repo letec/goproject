@@ -66,7 +66,7 @@ func scanAllParams(rows *sql.Rows) map[string]interface{} {
 	for i := 0; i < length; i++ {
 		columnPointers[i] = &value[i]
 	}
-	// 这个是最经典的 把一个interface的切片作为可变参数传进去scan 有多少列都在columnPointers里面了
+	// 把一个interface的切片作为可变参数传进去scan 有多少列都在columnPointers里面了
 	rows.Scan(columnPointers...)
 	// 创建结果变量存返回值
 	result := make(map[string]interface{})

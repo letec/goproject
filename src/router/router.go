@@ -17,11 +17,12 @@ func InitRouter(port string) {
 	router := gin.New()
 	router.Use(Cors())
 	router.GET("/captcha", controller.CreateCaptcha)                     // 验证码
-	router.POST("/maintenance", JSONParams(), controller.GetMaintenance) // 维护
+	router.POST("/maintenance", JSONParams(), controller.GetMaintenance) // 系统维护消息
 	router.POST("/signin", JSONParams(), controller.SignIn)              // 登陆
 	router.POST("/signup", JSONParams(), controller.SignUp)              // 注册
 	router.POST("/hall", JSONParams(), controller.GetSeatList)           // 获取房间信息
 	router.POST("/intohall", JSONParams(), controller.GetIntoHall)       // 进入房间
+	router.POST("/seatdown", JSONParams(), controller.SeatDown)          // 坐下
 	router.Run(port)
 }
 

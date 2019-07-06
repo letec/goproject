@@ -46,3 +46,15 @@ SELECT a.*,b.Avatar FROM `user` LEFT JOIN `account` ON a.id = b.UserID WHERE a.i
 ======2019-07-03 16:32:40=====
 SELECT a.*,b.Avatar FROM `user` LEFT JOIN `account` ON a.id = b.UserID WHERE a.id IN (1)
 
+======2019-07-05 09:06:34=====
+SELECT a.*,b.Avatar FROM `user` LEFT JOIN `account` ON a.id = b.UserID WHERE a.id IN (1)
+
+======2019-07-05 09:06:44=====
+SELECT a.*,b.Avatar FROM `user` LEFT JOIN `account` ON a.id = b.UserID WHERE a.id IN (1)
+
+======2019-07-05 09:08:07=====
+SELECT a.*,b.Avatar FROM `user` LEFT JOIN `account` ON a.id = b.UserID WHERE a.id IN (1)
+
+======2019-07-05 09:08:47=====
+SELECT a.*,b.Avatar FROM `user` LEFT JOIN `account` ON a.id = b.UserID WHERE a.id IN (1)
+

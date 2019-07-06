@@ -32,6 +32,9 @@ func main() {
 	// 连接REDIS
 	model.RedisConnect()
 
+	// 连接MongoDB
+	model.MongoDBConnection()
+
 	// 获取或初始化数据库内的配置信息
 	model.InitSysConfig()
 

@@ -22,6 +22,13 @@ func LoadRedisConfig() (map[string]string, error) {
 	return ret, err
 }
 
+// LoadMongoConfig 加载redis配置文件
+func LoadMongoConfig() (map[string]string, error) {
+	filePath := "config/mongo.json"
+	ret, err := getJSONInFile(filePath)
+	return ret, err
+}
+
 // LoadMysqlConfig 加载mysql配置文件
 func LoadMysqlConfig() (map[string]string, error) {
 	filePath := "config/mysql.json"

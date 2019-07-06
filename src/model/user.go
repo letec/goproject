@@ -107,13 +107,15 @@ func SetOid(userid string) (string, error) {
 }
 
 // GetUserInfoInHall 获取大厅中用户信息
-func GetUserInfoInHall(allID []string) (map[int]map[string]interface{}, error) {
+func GetUserInfoInHall(allID []string, gameCode string) (map[int]map[string]interface{}, error) {
 	var result = make(map[int]map[string]interface{})
 	if len(allID) == 0 {
 		return result, nil
 	}
 	ids := strings.Join(allID, ",")
-	sql := fmt.Sprintf("SELECT a.*,b.Avatar FROM `user` LEFT JOIN `account` ON a.id = b.UserID WHERE a.id IN (%v)", ids)
+	win := "b." + gameCode + "Win"
+	lose := "b." + gameCode + "Lose"
+	sql := fmt.Sprintf("SELECT a.*,b.Avatar,%v,%v FROM `user` AS a LEFT JOIN `account` AS b ON a.id = b.UserID WHERE a.id IN (%v)", win, lose, ids)
 	rows, err := db.Query(sql)
 	if err != nil {
 		common.WriteLog(dbLogPath, sql)

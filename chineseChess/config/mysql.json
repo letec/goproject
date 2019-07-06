@@ -1,0 +1,11 @@
+{
+    "dbm_username":"root",
+    "dbm_password":"root",
+    "dbm_dbname":"online",
+    "dbm_host":"localhost:3306",
+
+    "dbs_username":"root",
+    "dbs_password":"root",
+    "dbs_dbname":"online",
+    "dbs_host":"localhost:3306"
+}

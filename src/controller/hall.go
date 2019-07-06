@@ -5,17 +5,32 @@ import (
 	"goproject/src/common"
 	"goproject/src/model"
 	"net/http"
-	"strconv"
 
-	"github.com/garyburd/redigo/redis"
 	"github.com/gin-gonic/gin"
+	"gopkg.in/mgo.v2/bson"
 )
 
-// HallConfig 房间配置
-var HallConfig = map[string]map[string]string{}
+// Table for user
+type Table struct {
+	ID            string `bson:"ID"`
+	PlayerA       string `bson:"PlayerA"`
+	PlayerB       string `bson:"PlayerB"`
+	PlayerC       string `bson:"PlayerC"`
+	PlayerAStatus string `bson:"PlayerAStatus"`
+	PlayerBStatus string `bson:"PlayerBStatus"`
+	PlayerCStatus string `bson:"PlayerCStatus"`
+	Status        string `bson:"Status"`
+}
 
-func init() {
-	HallConfig["chineseChess"] = map[string]string{"tableNumbers": "35"}
+// User info set
+type User struct {
+	UserID   string `bson:"UserID"`
+	UserName string `bson:"UserName"`
+	Avatar   string `bson:"Avatar"`
+	Win      string `bson:"Win"`
+	Lose     string `bson:"Lose"`
+	Score    string `bson:"Score"`
+	Status   string `bson:"Status"`
 }
 
 // GetSeatList 获取房间列表
@@ -26,44 +41,90 @@ func GetSeatList(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"result": false, "msg": "参数缺失"})
 		return
 	}
-	key := params["gameCode"]
-	if _, exist := HallConfig[key]; !exist {
+	gameCode := params["gameCode"]
+	if !common.InSlice(gameCode, AllGame) {
 		c.JSON(http.StatusOK, gin.H{"result": false, "msg": "游戏代号错误"})
 		return
 	}
-	nums, _ := strconv.Atoi(HallConfig["chineseChess"]["tableNumbers"])
-	var list = []map[string]string{}
-	for i := 1; i <= nums; i++ {
-		temp := map[string]string{}
-		index := strconv.Itoa(i)
-		temp["PlayerA"] = model.RedisGetHash("HALL_chineseHall_"+index, "PlayerA")
-		temp["PlayerB"] = model.RedisGetHash("HALL_chineseHall_"+index, "PlayerB")
-		temp["PlayerAStatus"] = model.RedisGetHash("HALL_chineseHall_"+index, "PlayerAStatus")
-		temp["PlayerBStatus"] = model.RedisGetHash("HALL_chineseHall_"+index, "PlayerBStatus")
-		temp["Status"] = model.RedisGetHash("HALL_chineseHall_"+index, "Status")
-		list = append(list, temp)
+	con := model.Mongo.Copy()
+	defer con.Close()
+
+	tables := []Table{}
+	con.DB("online").C("HALL_" + gameCode + "_Tables").Find(nil).All(&tables)
+
+	users := []User{}
+	con.DB("online").C("HALL_" + gameCode + "_Users").Find(nil).All(&users)
+	userList := []User{}
+	for i := 0; i < len(users); i++ {
+		temp, _ := model.GetUserInfoInHall([]string{users[i].UserID}, gameCode)
+		if len(temp) > 0 {
+			users[i].UserName = temp[0]["UserName"].(string)
+			users[i].Avatar = temp[0]["Avatar"].(string)
+			users[i].Score = temp[0]["Score"].(string)
+			users[i].Win = temp[0][gameCode+"Win"].(string)
+			users[i].Lose = temp[0][gameCode+"Lose"].(string)
+			userList = append(userList, users[i])
+		}
 	}
-	Rds := model.RedisClient.Get()
-	defer Rds.Close()
-	result, _ := redis.Strings(Rds.Do("SMEMBERS", "HALL_chineseHall_User_List"))
-	var users = []string{}
-	for i := 0; i < len(result); i++ {
-		users = append(users, result[i])
-	}
-	userList, _ := model.GetUserInfoInHall(users)
-	c.JSON(http.StatusOK, gin.H{"result": true, "msg": "", "data": gin.H{"tables": list, "users": userList}})
+	c.JSON(http.StatusOK, gin.H{"result": true, "msg": "", "data": gin.H{"tables": tables, "users": userList}})
 }
 
 // GetIntoHall 进入房间
 func GetIntoHall(c *gin.Context) {
 	userid, _ := c.Get("userid")
-	Rds := model.RedisClient.Get()
-	defer Rds.Close()
-	result, _ := redis.Int(Rds.Do("SISMEMBER", "HALL_chineseHall_User_List", userid))
-	if result == 1 {
+	info, _ := c.Get("MAP")
+	params := info.(map[string]string)
+	gameCode := params["gameCode"]
+	if !common.InSlice(gameCode, AllGame) {
+		c.JSON(http.StatusOK, gin.H{"result": false, "msg": "游戏代号错误"})
+		return
+	}
+	collection := fmt.Sprintf("HALL_%v_Users", gameCode)
+
+	conn := model.Mongo.Copy()
+	defer conn.Close()
+
+	nums, _ := conn.DB("online").C(collection).Find(bson.M{"UserID": userid.(string)}).Count()
+
+	if nums > 0 {
 		c.JSON(http.StatusOK, gin.H{"result": false, "msg": "已经在房间中", "data": "EXIST"})
 		return
 	}
-	reply, err := Rds.Do("SADD", "HALL_chineseHall_User_List", userid)
-	fmt.Println(reply, err)
+	err := conn.DB("online").C(collection).Insert(User{UserID: userid.(string), Win: "0", Lose: "0", Score: "0", Status: "0"})
+	if err == nil {
+		c.JSON(http.StatusOK, gin.H{"result": true, "msg": "成功进入", "data": ""})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"result": false, "msg": "进入房间失败!", "data": "FAIL"})
+}
+
+// SeatDown player seat
+func SeatDown(c *gin.Context) {
+	info, _ := c.Get("MAP")
+	params := info.(map[string]string)
+	if !common.CheckParamsExist([]string{"gameCode", "tableID", "seat"}, params) {
+		c.JSON(http.StatusOK, gin.H{"result": false, "msg": "参数缺失"})
+		return
+	}
+	gameCode := params["gameCode"]
+	if !common.InSlice(gameCode, AllGame) {
+		c.JSON(http.StatusOK, gin.H{"result": false, "msg": "游戏代号错误"})
+		return
+	}
+	userid, _ := c.Get("userid")
+	tableID := params["tableID"]
+	seat := params["seat"]
+
+	conn := model.Mongo.Copy()
+	defer conn.Close()
+
+	collection := fmt.Sprintf("HALL_%v_Tables", gameCode)
+	err := conn.DB("online").C(collection).Update(bson.M{"ID": tableID, seat: ""}, bson.M{"$set": bson.M{seat: userid}})
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusOK, gin.H{"result": false, "msg": "这个座位已经有人!"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"result": true, "msg": "您已经进入房间!"})
+	return
 }

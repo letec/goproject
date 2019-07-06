@@ -8,6 +8,11 @@ import (
 	"github.com/mojocn/base64Captcha"
 )
 
+// AllGame 所有游戏
+var AllGame = []string{
+	"ChineseChess",
+}
+
 // GetMaintenance 得到维护情况
 func GetMaintenance(c *gin.Context) {
 	result := model.GetMaintenance()
