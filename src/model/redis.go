@@ -133,3 +133,11 @@ func RedisGetHash(key string, offset string) string {
 	}
 	return ret
 }
+
+// RedisDel 删除
+func RedisDel(key string) bool {
+	Rds := RedisClient.Get()
+	defer Rds.Close()
+	_, err := Rds.Do("DEL", key)
+	return err == nil
+}

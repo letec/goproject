@@ -92,10 +92,18 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		var msg Message
 		// Read in a new message as JSON and map it to a Message object
 		err := ws.ReadJSON(&msg)
+
 		if err != nil {
 			log.Printf("error: %v", err)
+			ws.Close()
 			delete(clients, ws)
 		}
+		ws.SetCloseHandler(func(code int, text string) error {
+			ws.Close()
+			delete(clients, ws)
+			return nil
+		})
+
 		// Send the newly received message to the broadcast channel
 		broadcast <- msg
 	}
@@ -115,15 +123,6 @@ func handleMessages() {
 
 			}
 			break
-		}
-		// Send it out to every client that is currently connected
-		for client := range clients {
-			err := client.WriteJSON(msg)
-			if err != nil {
-				log.Printf("error: %v", err)
-				client.Close()
-				delete(clients, client)
-			}
 		}
 	}
 }

@@ -21,8 +21,9 @@ func InitRouter(port string) {
 	router.POST("/signin", JSONParams(), controller.SignIn)              // 登陆
 	router.POST("/signup", JSONParams(), controller.SignUp)              // 注册
 	router.POST("/hall", JSONParams(), controller.GetSeatList)           // 获取房间信息
-	router.POST("/intohall", JSONParams(), controller.GetIntoHall)       // 进入房间
+	router.POST("/intohall", JSONParams(), controller.GetIntoHall)       // 进入大厅
 	router.POST("/seatdown", JSONParams(), controller.SeatDown)          // 坐下
+	router.POST("/standup", JSONParams(), controller.StandUP)            // 从座位站起来
 	router.Run(port)
 }
 
